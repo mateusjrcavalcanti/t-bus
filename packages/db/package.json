@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@unibus/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -26,14 +26,14 @@
     "zod-prisma-types": "^3.1.6"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@unibus/eslint-config": "workspace:*",
+    "@unibus/prettier-config": "workspace:*",
+    "@unibus/tsconfig": "workspace:*",
     "prisma": "^5.6.0",
     "dotenv-cli": "^7.4.1",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },
-  "prettier": "@reb/prettier-config"
+  "prettier": "@unibus/prettier-config"
 }

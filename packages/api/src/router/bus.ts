@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
-import { CreateBusSchema } from "@acme/validators";
+import { CreateBusSchema } from "@unibus/validators";
 
 import { protectedProcedure, publicProcedure } from "../trpc";
 

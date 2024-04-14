@@ -1,10 +1,10 @@
 "use client";
 
+import type { RouterOutputs } from "@unibus/api";
 import { use } from "react";
 
-import type { RouterOutputs } from "@acme/api";
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
+import { cn } from "@unibus/ui";
+import { Button } from "@unibus/ui/button";
 import {
   Form,
   FormControl,
@@ -12,10 +12,10 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@acme/ui/form";
-import { Input } from "@acme/ui/input";
-import { toast } from "@acme/ui/toast";
-import { CreateBusSchema } from "@acme/validators";
+} from "@unibus/ui/form";
+import { Input } from "@unibus/ui/input";
+import { toast } from "@unibus/ui/toast";
+import { CreateBusSchema } from "@unibus/validators";
 
 import { api } from "~/trpc/react";
 
