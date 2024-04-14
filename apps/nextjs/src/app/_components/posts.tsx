@@ -15,30 +15,30 @@ import {
 } from "@acme/ui/form";
 import { Input } from "@acme/ui/input";
 import { toast } from "@acme/ui/toast";
-import { CreatePostSchema } from "@acme/validators";
+import { CreateBusSchema } from "@acme/validators";
 
 import { api } from "~/trpc/react";
 
 export function CreatePostForm() {
   const form = useForm({
-    schema: CreatePostSchema,
+    schema: CreateBusSchema,
     defaultValues: {
-      content: "",
-      title: "",
+      plate: "",
+      password: "",
     },
   });
 
   const utils = api.useUtils();
-  const createPost = api.post.create.useMutation({
+  const createPost = api.bus.create.useMutation({
     onSuccess: async () => {
       form.reset();
-      await utils.post.invalidate();
+      await utils.bus.invalidate();
     },
     onError: (err) => {
       toast.error(
         err.data?.code === "UNAUTHORIZED"
-          ? "You must be logged in to post"
-          : "Failed to create post",
+          ? "You must be logged in to bus"
+          : "Failed to create bus",
       );
     },
   });
@@ -53,11 +53,11 @@ export function CreatePostForm() {
       >
         <FormField
           control={form.control}
-          name="title"
+          name="plate"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input {...field} placeholder="Title" />
+                <Input {...field} placeholder="Placa" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,11 +65,11 @@ export function CreatePostForm() {
         />
         <FormField
           control={form.control}
-          name="content"
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input {...field} placeholder="Content" />
+                <Input {...field} placeholder="Chave de acesso" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,15 +82,15 @@ export function CreatePostForm() {
 }
 
 export function PostList(props: {
-  posts: Promise<RouterOutputs["post"]["all"]>;
+  buss: Promise<RouterOutputs["bus"]["all"]>;
 }) {
   // TODO: Make `useSuspenseQuery` work without having to pass a promise from RSC
-  const initialData = use(props.posts);
-  const { data: posts } = api.post.all.useQuery(undefined, {
+  const initialData = use(props.buss);
+  const { data: buss } = api.bus.all.useQuery(undefined, {
     initialData,
   });
 
-  if (posts.length === 0) {
+  if (buss.length === 0) {
     return (
       <div className="relative flex w-full flex-col gap-4">
         <PostCardSkeleton pulse={false} />
@@ -98,7 +98,7 @@ export function PostList(props: {
         <PostCardSkeleton pulse={false} />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10">
-          <p className="text-2xl font-bold text-white">No posts yet</p>
+          <p className="text-2xl font-bold text-white">No buss yet</p>
         </div>
       </div>
     );
@@ -106,26 +106,24 @@ export function PostList(props: {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {posts.map((p) => {
-        return <PostCard key={p.id} post={p} />;
+      {buss.map((p) => {
+        return <PostCard key={p.id} bus={p} />;
       })}
     </div>
   );
 }
 
-export function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
-}) {
+export function PostCard(props: { bus: RouterOutputs["bus"]["all"][number] }) {
   const utils = api.useUtils();
-  const deletePost = api.post.delete.useMutation({
+  const deletePost = api.bus.delete.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
+      await utils.bus.invalidate();
     },
     onError: (err) => {
       toast.error(
         err.data?.code === "UNAUTHORIZED"
-          ? "You must be logged in to delete a post"
-          : "Failed to delete post",
+          ? "You must be logged in to delete a bus"
+          : "Failed to delete bus",
       );
     },
   });
@@ -133,14 +131,14 @@ export function PostCard(props: {
   return (
     <div className="flex flex-row rounded-lg bg-muted p-4">
       <div className="flex-grow">
-        <h2 className="text-2xl font-bold text-primary">{props.post.title}</h2>
-        <p className="mt-2 text-sm">{props.post.content}</p>
+        <h2 className="text-2xl font-bold text-primary">{props.bus.plate}</h2>
+        <p className="mt-2 text-sm">{props.bus.password}</p>
       </div>
       <div>
         <Button
           variant="ghost"
           className="cursor-pointer text-sm font-bold uppercase text-primary hover:bg-transparent hover:text-white"
-          onClick={() => deletePost.mutate(props.post.id)}
+          onClick={() => deletePost.mutate(props.bus.id)}
         >
           Delete
         </Button>

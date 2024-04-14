@@ -1,6 +1,16 @@
 import { z } from "zod";
 
-export const CreatePostSchema = z.object({
-  title: z.string().min(1),
-  content: z.string().min(1),
+export const busSchema = z.object({
+  id: z.string(),
+  plate: z.string(),
+  password: z.string(),
+  isActive: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const CreateBusSchema = busSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });

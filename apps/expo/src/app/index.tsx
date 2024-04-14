@@ -8,7 +8,7 @@ import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
 
 function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
+  bus: RouterOutputs["bus"]["all"][number];
   onDelete: () => void;
 }) {
   return (
@@ -17,15 +17,15 @@ function PostCard(props: {
         <Link
           asChild
           href={{
-            pathname: "/post/[id]",
-            params: { id: props.post.id },
+            pathname: "/bus/[id]",
+            params: { id: props.bus.id },
           }}
         >
           <Pressable className="">
             <Text className=" text-xl font-semibold text-primary">
-              {props.post.title}
+              {props.bus.plate}
             </Text>
-            <Text className="mt-2 text-foreground">{props.post.content}</Text>
+            <Text className="mt-2 text-foreground">{props.bus.password}</Text>
           </Pressable>
         </Link>
       </View>
@@ -39,14 +39,16 @@ function PostCard(props: {
 function CreatePost() {
   const utils = api.useUtils();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [plate, setPlate] = useState("");
+  const [password, setPassword] = useState("");
+  const [isActive, setIsActive] = useState(true);
 
-  const { mutate, error } = api.post.create.useMutation({
+  const { mutate, error } = api.bus.create.useMutation({
     async onSuccess() {
-      setTitle("");
-      setContent("");
-      await utils.post.all.invalidate();
+      setPlate("");
+      setPassword("");
+      setIsActive(true);
+      await utils.bus.all.invalidate();
     },
   });
 
@@ -54,8 +56,8 @@ function CreatePost() {
     <View className="mt-4 flex gap-2">
       <TextInput
         className=" items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={title}
-        onChangeText={setTitle}
+        value={plate}
+        onChangeText={setPlate}
         placeholder="Title"
       />
       {error?.data?.zodError?.fieldErrors.title && (
@@ -65,8 +67,8 @@ function CreatePost() {
       )}
       <TextInput
         className="items-center rounded-md border border-input bg-background px-3  text-lg leading-[1.25] text-foreground"
-        value={content}
-        onChangeText={setContent}
+        value={password}
+        onChangeText={setPassword}
         placeholder="Content"
       />
       {error?.data?.zodError?.fieldErrors.content && (
@@ -78,8 +80,9 @@ function CreatePost() {
         className="flex items-center rounded bg-primary p-2"
         onPress={() => {
           mutate({
-            title,
-            content,
+            plate,
+            password,
+            isActive,
           });
         }}
       >
@@ -87,7 +90,7 @@ function CreatePost() {
       </Pressable>
       {error?.data?.code === "UNAUTHORIZED" && (
         <Text className="mt-2 text-destructive">
-          You need to be logged in to create a post
+          You need to be logged in to create a bus
         </Text>
       )}
     </View>
@@ -97,10 +100,10 @@ function CreatePost() {
 export default function Index() {
   const utils = api.useUtils();
 
-  const postQuery = api.post.all.useQuery();
+  const busQuery = api.bus.all.useQuery();
 
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => utils.post.all.invalidate().then(),
+  const deletePostMutation = api.bus.delete.useMutation({
+    onSettled: () => utils.bus.all.invalidate().then(),
   });
 
   return (
@@ -113,25 +116,25 @@ export default function Index() {
         </Text>
 
         <Pressable
-          onPress={() => void utils.post.all.invalidate()}
+          onPress={() => void utils.bus.all.invalidate()}
           className="flex items-center rounded-lg bg-primary p-2"
         >
-          <Text className="text-foreground"> Refresh posts</Text>
+          <Text className="text-foreground"> Refresh buss</Text>
         </Pressable>
 
         <View className="py-2">
           <Text className="font-semibold italic text-primary">
-            Press on a post
+            Press on a bus
           </Text>
         </View>
 
         <FlashList
-          data={postQuery.data}
+          data={busQuery.data}
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
             <PostCard
-              post={p.item}
+              bus={p.item}
               onDelete={() => deletePostMutation.mutate(p.item.id)}
             />
           )}
