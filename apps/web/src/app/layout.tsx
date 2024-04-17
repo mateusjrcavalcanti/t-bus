@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { TRPCReactProvider } from "@/trpc/react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
@@ -6,9 +7,7 @@ import { cn } from "@unibus/ui";
 import { ThemeProvider, ThemeToggle } from "@unibus/ui/theme";
 import { Toaster } from "@unibus/ui/toast";
 
-import { TRPCReactProvider } from "~/trpc/react";
-
-import "~/app/globals.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(

@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import { MainNav } from "@/components/dashboard/main-nav";
+import { Search } from "@/components/dashboard/search";
+import { UserNav } from "@/components/dashboard/user-nav";
 
 import { Toaster } from "@unibus/ui/toast";
-
-import { MainNav } from "./_components/main-nav";
-import { Search } from "./_components/search";
-import { UserNav } from "./_components/user-nav";
 
 export default function DashboardPage({
   children,
@@ -17,23 +15,7 @@ export default function DashboardPage({
     <>
       <Toaster />
 
-      <div className="md:hidden">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
-      <div className="hidden flex-col md:flex">
+      <div className=" flex flex-col">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <MainNav className="mx-6" />

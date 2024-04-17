@@ -9,8 +9,8 @@ import {
 } from "@unibus/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@unibus/ui/tabs";
 
-import { Overview } from "./_components/overview";
-import { RecentLocales } from "./_components/recent-locales";
+import { Overview } from "../../../components/dashboard/overview";
+import { RecentLocales } from "../../../components/dashboard/recent-locales";
 
 export const metadata: Metadata = {
   title: "Dashboard",

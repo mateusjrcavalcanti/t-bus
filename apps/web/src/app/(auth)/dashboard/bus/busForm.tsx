@@ -2,6 +2,7 @@
 
 import type { z } from "zod";
 import { usePathname, useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -20,13 +21,11 @@ import { Switch } from "@unibus/ui/switch";
 import { toast } from "@unibus/ui/toast";
 import { CreateBusSchema } from "@unibus/validators";
 
-import { api } from "~/trpc/react";
-
 type BusFormValues = z.infer<typeof CreateBusSchema>;
 
 // This can come from your database or API.
 const defaultValues: Partial<BusFormValues> = {
-  plate: "ABC1B34",
+  plate: "",
   password: "",
   isActive: true,
 };
