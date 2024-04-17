@@ -88,8 +88,6 @@ export const columns: ColumnDef<Bus>[] = [
       <DataTableColumnHeader column={column} title="Ativo" />
     ),
     cell: ({ row }) => {
-      console.log(row.getValue("isActive"));
-
       const status = statuses.find(
         (status) => status.value == row.getValue("isActive"),
       );
