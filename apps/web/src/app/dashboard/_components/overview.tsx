@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 export function Overview() {
   const Map = useMemo(
     () =>
-      dynamic(() => import("../../_components/map"), {
+      dynamic(() => import("@unibus/ui/map"), {
         loading: () => <p>A map is loading</p>,
         ssr: false,
       }),
