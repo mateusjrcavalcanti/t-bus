@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 export default function Home() {
-  const Map = dynamic(() => import("./_components/map"), {
+  const Map = dynamic(() => import("@unibus/ui/map"), {
     loading: () => <p>A map is loading</p>,
     ssr: false,
   });
