@@ -8,12 +8,15 @@ import { Button } from "@unibus/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
   useForm,
 } from "@unibus/ui/form";
 import { Input } from "@unibus/ui/input";
+import { Switch } from "@unibus/ui/switch";
 import { toast } from "@unibus/ui/toast";
 import { CreateBusSchema } from "@unibus/validators";
 
@@ -25,8 +28,11 @@ export function CreatePostForm() {
     defaultValues: {
       plate: "",
       password: "",
+      isActive: true,
     },
   });
+
+  const onInvalid = (errors: unknown) => console.error(errors);
 
   const utils = api.useUtils();
   const createPost = api.bus.create.useMutation({
@@ -35,6 +41,8 @@ export function CreatePostForm() {
       await utils.bus.invalidate();
     },
     onError: (err) => {
+      console.log(err);
+
       toast.error(
         err.data?.code === "UNAUTHORIZED"
           ? "You must be logged in to bus"
@@ -47,9 +55,10 @@ export function CreatePostForm() {
     <Form {...form}>
       <form
         className="flex w-full max-w-2xl flex-col gap-4"
-        onSubmit={form.handleSubmit((data) => {
-          createPost.mutate(data);
-        })}
+        onSubmit={form.handleSubmit(
+          (data) => createPost.mutate(data),
+          onInvalid,
+        )}
       >
         <FormField
           control={form.control}
@@ -75,22 +84,40 @@ export function CreatePostForm() {
             </FormItem>
           )}
         />
-        <Button>Create</Button>
+        <FormField
+          control={form.control}
+          name="isActive"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex flex-row items-center justify-between">
+                <FormLabel>Dispositivo Ativo</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </div>
+              <FormDescription>
+                O dispositivo está ativo e pronto para ser utilizado.
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Create</Button>
       </form>
     </Form>
   );
 }
 
-export function PostList(props: {
-  buss: Promise<RouterOutputs["bus"]["all"]>;
-}) {
+export function PostList(props: { bus: Promise<RouterOutputs["bus"]["all"]> }) {
   // TODO: Make `useSuspenseQuery` work without having to pass a promise from RSC
-  const initialData = use(props.buss);
-  const { data: buss } = api.bus.all.useQuery(undefined, {
+  const initialData = use(props.bus);
+  const { data: bus } = api.bus.all.useQuery(undefined, {
     initialData,
   });
 
-  if (buss.length === 0) {
+  if (bus.length === 0) {
     return (
       <div className="relative flex w-full flex-col gap-4">
         <PostCardSkeleton pulse={false} />
@@ -98,7 +125,7 @@ export function PostList(props: {
         <PostCardSkeleton pulse={false} />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10">
-          <p className="text-2xl font-bold text-white">No buss yet</p>
+          <p className="text-2xl font-bold text-white">No bus yet</p>
         </div>
       </div>
     );
@@ -106,7 +133,7 @@ export function PostList(props: {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      {buss.map((p) => {
+      {bus.map((p) => {
         return <PostCard key={p.id} bus={p} />;
       })}
     </div>
