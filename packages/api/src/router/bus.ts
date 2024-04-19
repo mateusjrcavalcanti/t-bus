@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 
 import { CreateBusSchema } from "@unibus/validators";
@@ -7,7 +8,6 @@ import { protectedProcedure, publicProcedure } from "../trpc";
 
 export const busRouter = {
   all: publicProcedure.query(({ ctx }) => {
-    // return ctx.prisma.select().from(schema.bus).orderBy(desc(schema.bus.id));
     return ctx.prisma.bus.findMany();
   }),
 
@@ -24,8 +24,10 @@ export const busRouter = {
   create: protectedProcedure
     .input(CreateBusSchema)
     .mutation(({ ctx, input }) => {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(input.password, salt);
       return ctx.prisma.bus.create({
-        data: input,
+        data: { ...input, password: hash },
       });
     }),
 

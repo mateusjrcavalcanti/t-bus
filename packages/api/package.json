@@ -19,10 +19,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@trpc/server": "11.0.0-rc.334",
+    "@types/bcrypt": "^5.0.2",
     "@unibus/auth": "workspace:*",
     "@unibus/db": "workspace:*",
     "@unibus/validators": "workspace:*",
-    "@trpc/server": "11.0.0-rc.334",
+    "bcrypt": "^5.1.1",
     "superjson": "2.2.1",
     "zod": "^3.22.4"
   },
