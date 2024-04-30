@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@trpc/server": "11.0.0-rc.334",
-    "@types/bcrypt": "^5.0.2",
     "@unibus/auth": "workspace:*",
     "@unibus/db": "workspace:*",
     "@unibus/validators": "workspace:*",
@@ -29,10 +28,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@unibus/eslint-config": "workspace:*",
     "@unibus/prettier-config": "workspace:*",
     "@unibus/tsconfig": "workspace:*",
-    "eslint": "^9.0.0",
+    "eslint": "^9.1.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },
