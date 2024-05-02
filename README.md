@@ -111,6 +111,25 @@ Para adicionar um novo pacote, basta executar `pnpm turbo gen init` na raiz do m
 
 O gerador configura o package.json, tsconfig.json e um index.ts, além de configurar todas as configurações necessárias para as ferramentas relacionadas ao seu pacote, como formatação, linting e verificação de tipos. Quando o pacote for criado, você estará pronto para começar a construí-lo.
 
+### 4. Configurando o SSL
+
+#### 4.1 Instalar o mkcert
+
+Siga as instruções de instalação fornecidas na página do projeto no GitHub: [mkcert](https://github.com/FiloSottile/mkcert).
+> **Nota**
+> Não esqueça de executar `mkcert -install` no processo de instalação do *mkcert*
+
+#### Gerando certificados
+
+Use o seguinte comando para gerar certificados para o domínio `unibus.fbi.com`:
+
+```bash
+mkcert -cert-file docker/nginx/certs/unibus.fbi.com/fullchain.pem -key-file docker/nginx/certs/unibus.fbi.com/privkey.pem unibus.fbi.com '*.unibus.fbi.com'
+```
+
+> **Nota**
+> `*.fbi.com` é um domínio DNS curinga público apontando para localhost (127.0.0.1)
+
 ## References
 
 Este projeto foi criado usando [create-t3-app](https://github.com/t3-oss/create-t3-app).

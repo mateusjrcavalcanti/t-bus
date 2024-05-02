@@ -34,7 +34,27 @@ services:
       - "postgres"
     restart: unless-stopped
 
+  web:
+    container_name: unibus_web
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+      args:
+        - NODE_VERSION=20.12.2
+        - PROJECT=web
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=development
+    restart: always
+    ports:
+      - 8000:3000
+    depends_on:
+      - postgres
+
   mosquitto:
+    container_name: unibus_mqtt
     image: iegomez/mosquitto-go-auth:2.1.0-mosquitto_1.6.14
     volumes:
       - ./docker/mosquitto.conf:/etc/mosquitto/mosquitto.conf
@@ -43,9 +63,35 @@ services:
       - 9001:9001
     depends_on:
       - postgres
+      - web
 
+  proxy:
+    image: nginx:latest
+    container_name: unibus_proxy 
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME:-unibus.fbi.com}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates:ro
+      - ./docker/nginx/certs/:/etc/nginx/certs/:ro
+      - ./docker/certbot/www:/var/www/certbot/:ro
+    depends_on:
+      - mosquitto
+      - web
 
- 
+  certbot:
+    image: certbot/certbot:latest
+    container_name: unibus_certbot
+    volumes: 
+      - ./docker/certbot/conf:/etc/letsencrypt/:rw
+      - ./docker/certbot/www:/var/www/certbot/:rw
+      - ./docker/nginx/certs/${DOMAIN_NAME:-unibus.fbi.com}/:/etc/letsencrypt/live/${DOMAIN_NAME:-unibus.fbi.com}/:rw
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email email@email.com -d ${DOMAIN_NAME:-unibus.fbi.com} --agree-tos
+    depends_on:
+      - proxy
+
 volumes:
   unibus_postgres:
   unibus_pgadmin:
