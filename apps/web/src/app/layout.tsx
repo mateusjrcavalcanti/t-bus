@@ -9,6 +9,8 @@ import { Toaster } from "@unibus/ui/toast";
 
 import "@/app/globals.css";
 
+import { BusMapControllerProvider } from "./mapProvider";
+
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.VERCEL_ENV === "production"
@@ -43,7 +45,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{props.children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <BusMapControllerProvider>
+              {props.children}
+            </BusMapControllerProvider>
+          </TRPCReactProvider>
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>

@@ -1,0 +1,33 @@
+{
+  "name": "@unibus/websocket",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "build/index.js",
+  "scripts": {
+    "with-env": "dotenv -e ../../.env --",
+    "dev": "nodemon",
+    "testmqtt": "nodemon --exec 'ts-node --files ./src/testmqtt.ts'",
+    "build": "npx tsc",
+    "start": "node build/index.js",
+    "clean": "git clean -xdf .turbo node_modules build",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@unibus/eslint-config": "workspace:*",
+    "@unibus/prettier-config": "workspace:*",
+    "@unibus/tsconfig": "workspace:*",
+    "eslint": "^9.1.1",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@unibus/prettier-config",
+  "dependencies": {
+    "mqtt": "^5.5.5",
+    "nodemon": "^3.1.0",
+    "socket.io": "^4.7.5",
+    "ts-node": "^10.9.2"
+  }
+}

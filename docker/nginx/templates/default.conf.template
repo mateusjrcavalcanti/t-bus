@@ -17,10 +17,30 @@ server {
     ssl_certificate /etc/nginx/certs/${DOMAIN_NAME}/fullchain.pem;
     ssl_certificate_key /etc/nginx/certs/${DOMAIN_NAME}/privkey.pem;
 
-    location / {
+   location / {
         proxy_set_header   X-Forwarded-For $remote_addr;
         proxy_set_header   Host $http_host;
         proxy_pass         http://unibus_web:3000;
+    }
+}
+
+
+server {
+    listen 443 ssl;
+    server_name websocket.${DOMAIN_NAME};
+
+    ssl_certificate /etc/nginx/certs/${DOMAIN_NAME}/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/${DOMAIN_NAME}/privkey.pem;
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+
+        proxy_pass http://unibus_websocket:4000;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 }
 

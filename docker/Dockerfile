@@ -1,4 +1,6 @@
-FROM node:20-alpine AS base
+ARG NODE_VERSION=20-alpine
+
+FROM node:${NODE_VERSION} AS base
 RUN apk add --no-cache libc6-compat
 RUN npm i -g pnpm@9.0.1
 
@@ -10,4 +12,4 @@ RUN pnpm i
 FROM deps AS dev
 WORKDIR /app
 
-CMD pnpm dev --filter=@unibus/web
+ARG PACKAGE="@unibus/web"

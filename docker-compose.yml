@@ -40,19 +40,36 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       target: dev
-      args:
-        - NODE_VERSION=20.12.2
-        - PROJECT=web
-    env_file:
-      - ./.env
+    restart: always
     environment:
       - NODE_ENV=development
-    restart: always
-    ports:
-      - 8000:3000
+    env_file:
+      - ./.env
     depends_on:
       - postgres
-
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: pnpm dev --filter='@unibus/web'
+  
+  websocket:
+    container_name: unibus_websocket
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: dev
+      args:
+        PACKAGE: '@unibus/websocket'
+    restart: always
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - web
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: pnpm dev --filter='@unibus/websocket'
+    
   mosquitto:
     container_name: unibus_mqtt
     image: iegomez/mosquitto-go-auth:2.1.0-mosquitto_1.6.14
@@ -80,6 +97,7 @@ services:
     depends_on:
       - mosquitto
       - web
+      - websocket
 
   certbot:
     image: certbot/certbot:latest

@@ -1,7 +1,7 @@
 # UNIBUS - Universitary Bus
 
 > **Nota**
-> Este é apenas um projeto de pesquisa, não deve ser usado `produção`
+> Este é apenas um projeto de pesquisa, não deve ser usado em `produção`
 
 ## Instalação
 
@@ -31,7 +31,12 @@ apps
   |   ├─ Navigation using Expo Router
   |   ├─ Tailwind using NativeWind
   |   └─ Typesafe API calls using tRPC
-  └─ web
+  ├─ web
+  |   ├─ Next.js 14
+  |   ├─ React 18
+  |   ├─ Tailwind CSS
+  |   └─ E2E Typesafe API Server & Client
+  └─ websocket
       ├─ Next.js 14
       ├─ React 18
       ├─ Tailwind CSS
@@ -130,6 +135,6 @@ mkcert -cert-file docker/nginx/certs/unibus.fbi.com/fullchain.pem -key-file dock
 > **Nota**
 > `*.fbi.com` é um domínio DNS curinga público apontando para localhost (127.0.0.1)
 
-## References
+## Referências
 
 Este projeto foi criado usando [create-t3-app](https://github.com/t3-oss/create-t3-app).

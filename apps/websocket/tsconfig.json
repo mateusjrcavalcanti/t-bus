@@ -1,0 +1,25 @@
+{
+  "extends": "@unibus/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es6", "dom"],
+    "allowJs": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "strict": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+
+    "sourceMap": true
+  },
+  "rootDir": "./src",
+  "outDir": "./dist",
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
