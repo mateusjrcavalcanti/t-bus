@@ -46,7 +46,7 @@ let metros = 0;
 
 const options: IClientOptions = {
   protocol: "mqtt",
-  host: "broker.hivemq.com",
+  host: "unibus.tech",
   port: 1883,
   username: "BRA2E19",
   password: "$2b$10$dZXJhblfaxfK2ADbjlZ1gOyMLp1RjbWqXulpn2jb0nrdm/UFoncUy",

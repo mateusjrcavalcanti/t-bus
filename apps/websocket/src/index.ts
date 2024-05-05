@@ -36,7 +36,7 @@ io.on("disconnect", (socket) =>
 // MQTT connection
 const options: IClientOptions = {
   protocol: "mqtt",
-  host: "broker.hivemq.com",
+  host: "unibus.tech",
   port: 1883,
   username: "anonymous",
   password: "anonymous",
