@@ -51,7 +51,7 @@
     "@unibus/prettier-config": "workspace:*",
     "@unibus/tailwind-config": "workspace:*",
     "@unibus/tsconfig": "workspace:*",
-    "eslint": "^9.1.1",
+    "eslint": "^8",
     "prettier": "^3.2.5",
     "react": "18.2.0",
     "tailwindcss": "^3.4.3",

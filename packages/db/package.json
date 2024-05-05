@@ -31,7 +31,7 @@
     "@unibus/tsconfig": "workspace:*",
     "prisma": "^5.6.0",
     "dotenv-cli": "^7.4.1",
-    "eslint": "^9.1.1",
+    "eslint": "^8",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },
