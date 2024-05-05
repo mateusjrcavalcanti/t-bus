@@ -1,0 +1,95 @@
+services:
+
+  postgres:
+    container_name: unibus_postgres
+    image: postgres   
+    env_file:
+      - ../.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+    volumes:
+      - unibus_postgres:/data/postgres
+      - "./postgres/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  
+  web:
+    container_name: unibus_web
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    restart: always
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ../.env
+    depends_on:
+      - postgres
+    volumes:
+      - /app/node_modules
+    command: pnpm dev --filter='@unibus/web'
+  
+  websocket:
+    container_name: unibus_websocket
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      target: dev
+      args:
+        PACKAGE: '@unibus/websocket'
+    restart: always
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - web
+    volumes:
+      - /app/node_modules
+    command: pnpm dev --filter='@unibus/websocket'
+    
+  mosquitto:
+    container_name: unibus_mqtt
+    image: iegomez/mosquitto-go-auth:2.1.0-mosquitto_1.6.14
+    volumes:
+      - ./mosquitto/mosquitto.conf:/etc/mosquitto/mosquitto.conf
+    ports:
+      - 1883:1883
+      - 9001:9001
+    depends_on:
+      - postgres
+      - web
+
+  proxy:
+    image: nginx:latest
+    container_name: unibus_proxy 
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME:-unibus.fbi.com}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./nginx/certs/:/etc/nginx/certs/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+    depends_on:
+      - mosquitto
+      - web
+      - websocket
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: unibus_certbot
+    volumes: 
+      - ./certbot/conf:/etc/letsencrypt/:rw
+      - ./certbot/www:/var/www/certbot/:rw
+      - ./nginx/certs/${DOMAIN_NAME:-unibus.fbi.com}/:/etc/letsencrypt/live/${DOMAIN_NAME:-unibus.fbi.com}/:rw
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email email@email.com -d ${DOMAIN_NAME:-unibus.fbi.com} --agree-tos
+    depends_on:
+      - proxy
+
+volumes:
+  unibus_postgres:
+  unibus_pgadmin:

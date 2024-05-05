@@ -37,10 +37,8 @@ apps
   |   ├─ Tailwind CSS
   |   └─ E2E Typesafe API Server & Client
   └─ websocket
-      ├─ Next.js 14
-      ├─ React 18
-      ├─ Tailwind CSS
-      └─ E2E Typesafe API Server & Client
+      ├─ Socket.IO
+      └─ MQTT.js
 packages
   ├─ api
   |   └─ tRPC v11 router definition

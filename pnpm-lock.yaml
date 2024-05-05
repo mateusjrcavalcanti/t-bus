@@ -14,6 +14,9 @@ importers:
       '@unibus/prettier-config':
         specifier: workspace:*
         version: link:tooling/prettier
+      dotenv-cli:
+        specifier: ^7.4.1
+        version: 7.4.1
       prettier:
         specifier: ^3.2.5
         version: 3.2.5

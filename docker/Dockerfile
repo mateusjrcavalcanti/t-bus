@@ -12,4 +12,4 @@ RUN pnpm i
 FROM deps AS dev
 WORKDIR /app
 
-ARG PACKAGE="@unibus/web"
+ENV NEXT_TELEMETRY_DEBUG=1
