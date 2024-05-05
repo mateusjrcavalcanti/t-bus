@@ -92,4 +92,3 @@ services:
 
 volumes:
   unibus_postgres:
-  unibus_pgadmin:
