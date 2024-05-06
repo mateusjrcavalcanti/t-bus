@@ -11,7 +11,7 @@ const port = 4000;
 const httpServer = createServer();
 
 httpServer
-  .once("error", (err) => {
+  .once("[HTTP] ", (err) => {
     console.error(err);
     process.exit(1);
   })
@@ -21,7 +21,7 @@ httpServer
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://unibus.fbi.com",
+    origin: "*",
   },
 });
 
