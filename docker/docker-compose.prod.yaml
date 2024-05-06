@@ -66,6 +66,8 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 9001:9001
+      - 1883:1883
     volumes:
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/certs/:/etc/nginx/certs/:ro

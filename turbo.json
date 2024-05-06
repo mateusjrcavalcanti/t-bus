@@ -25,6 +25,9 @@
       "persistent": true,
       "cache": false
     },
+    "@unibus/web#start": {
+      "dependsOn": ["@unibus/db#push"]
+    },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
       "outputMode": "new-only"

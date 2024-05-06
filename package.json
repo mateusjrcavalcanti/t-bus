@@ -22,6 +22,7 @@
     "typecheck": "turbo typecheck",
     "ui-add": "pnpm -F ui ui-add",
     "precommit": "turbo lint && turbo format && turbo typecheck",
+    "push": "turbo push",
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db studio",
     "db:migrate": "pnpm -F db migrate",
