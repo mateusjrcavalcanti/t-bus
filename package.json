@@ -7,7 +7,9 @@
   "packageManager": "pnpm@9.0.1",
   "scripts": {
     "build": "turbo build",
-    "clean": "git clean -xdf node_modules .turbo",
+    "start": "turbo start",
+    "clean": "git clean -xdfn --exclude=.env",
+    "clean:root": "git clean -xdf node_modules .turbo",
     "clean:workspaces": "turbo clean",
     "dev": "turbo dev --parallel",
     "dev:web": "turbo dev --filter=@unibus/web --parallel",

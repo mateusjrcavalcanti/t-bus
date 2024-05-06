@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
@@ -30,5 +30,3 @@ export default function Map(props: {
     </MapContainer>
   );
 }
-
-export { Marker, Popup };

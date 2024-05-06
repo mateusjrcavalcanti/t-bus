@@ -2,8 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-import { Marker, Popup } from "@unibus/ui/map";
-
 import { useBusMapController } from "./mapProvider";
 
 export default function Home() {
@@ -32,6 +30,13 @@ const ConnStatus = () => {
 };
 
 const Markers = () => {
+  const Marker = dynamic(() =>
+    import("@unibus/ui/leaflet").then((mod) => mod.Marker),
+  );
+  const Popup = dynamic(() =>
+    import("@unibus/ui/leaflet").then((mod) => mod.Popup),
+  );
+
   const { state } = useBusMapController();
 
   state.positions.map((position) =>

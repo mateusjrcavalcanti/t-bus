@@ -29,7 +29,7 @@ services:
       - postgres
     volumes:
       - /app/node_modules
-    command: pnpm dev --filter='@unibus/web'
+    command: pnpm start --filter='@unibus/web'
   
   websocket:
     container_name: unibus_websocket
@@ -46,7 +46,7 @@ services:
       - web
     volumes:
       - /app/node_modules
-    command: pnpm dev --filter='@unibus/websocket'
+    command: pnpm start --filter='@unibus/websocket'
     
   mosquitto:
     container_name: unibus_mqtt

@@ -8,7 +8,8 @@ FROM base AS dev
 WORKDIR /app
 
 FROM base AS prod
-ENV NEXT_TELEMETRY_DEBUG=0
+ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 COPY . .
 RUN pnpm i
+RUN pnpm build

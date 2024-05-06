@@ -6,7 +6,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.tsx",
-    "./data-table": "./src/data-table/index.tsx"
+    "./data-table": "./src/data-table/index.tsx",
+    "./map": "./src/map/index.tsx",
+    "./leaflet": "./src/map/leaflet.tsx"
   },
   "license": "MIT",
   "scripts": {
