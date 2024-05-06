@@ -80,16 +80,5 @@ services:
       - web
       - websocket
 
-  certbot:
-    image: certbot/certbot:latest
-    container_name: unibus_certbot
-    volumes: 
-      - ./certbot/conf:/etc/letsencrypt/:rw
-      - ./certbot/www:/var/www/certbot/:rw
-      - ./nginx/certs/${DOMAIN_NAME:-unibus.fbi.com}/:/etc/letsencrypt/live/${DOMAIN_NAME:-unibus.fbi.com}/:rw
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email email@email.com -d ${DOMAIN_NAME:-unibus.fbi.com} --agree-tos
-    depends_on:
-      - proxy
-
 volumes:
   unibus_postgres:

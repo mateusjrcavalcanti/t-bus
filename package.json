@@ -28,7 +28,8 @@
     "docker:dev": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.dev.yaml up -d",
     "docker:prod": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.prod.yaml up -d --build postgres mosquitto proxy web websocket",
     "docker:down": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.dev.yaml down",
-    "docker:certbot": "export $(cat .env | grep -v ^# | xargs) && docker compose up -d certbot"
+    "docker:certbot": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.certbot.yaml up",
+    "postdocker:certbot": "docker compose -f docker/docker-compose.certbot.yaml down"
   },
   "devDependencies": {
     "@unibus/prettier-config": "workspace:*",

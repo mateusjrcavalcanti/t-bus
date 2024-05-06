@@ -1,0 +1,29 @@
+services:
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: unibus_certbot
+    volumes: 
+      - ./certbot/conf:/etc/letsencrypt/:rw
+      - ./certbot/www:/var/www/certbot/:rw
+      - ./nginx/certs/${DOMAIN_NAME}/:/etc/letsencrypt/live/${DOMAIN_NAME}/:rw
+      - ./certbot/logs:/var/log:rw
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email email@email.com -d ${DOMAIN_NAME} --agree-tos
+    depends_on:
+      - certbot-proxy
+
+  certbot-proxy:
+    image: nginx:latest
+    container_name: unibus_proxy 
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./certbot/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./certbot/www:/var/www/certbot/:ro
+
+
+volumes:
+  unibus_postgres:
