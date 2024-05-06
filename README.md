@@ -8,7 +8,7 @@
 Use o comando para clonar o repositório:
 
 ```bash
-git clone https://github.com/mateusjrcavalcanti/t-bus.git
+git clone https://github.com/mateusjrcavalcanti/unibus.git
 ```
 
 ## Sobre

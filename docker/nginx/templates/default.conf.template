@@ -46,7 +46,7 @@ server {
 
 server {
     listen 1883;
-    server_name ${DOMAIN_NAME_VAR};
+    server_name ${DOMAIN_NAME};
 
     location / {
         proxy_pass http://unibus_mqtt:1883;
@@ -56,7 +56,7 @@ server {
 
 server {
     listen 9001;
-    server_name ${DOMAIN_NAME_VAR};
+    server_name ${DOMAIN_NAME};
 
     location / {
         proxy_pass http://unibus_mqtt:9001;

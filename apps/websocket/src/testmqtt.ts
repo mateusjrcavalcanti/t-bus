@@ -54,18 +54,22 @@ const options: IClientOptions = {
 
 const clientMQTT: MqttClient = connect(options);
 
-setInterval(() => {
-  metros = metros + qtdMetros;
-  const position = move(
-    -9.390472517435533,
-    -40.49732535541828,
-    0,
-    0,
-    metros,
-    0,
-  );
-  clientMQTT.publish(
-    `${clientMQTT.options.username}`,
-    `${position.lat},${position.long}`,
-  );
-}, 1000);
+clientMQTT.on("connect", () =>
+  setInterval(() => {
+    metros = metros + qtdMetros;
+    const position = move(
+      -9.390472517435533,
+      -40.49732535541828,
+      0,
+      0,
+      metros,
+      0,
+    );
+    clientMQTT.publish(
+      `${clientMQTT.options.username}`,
+      `${position.lat},${position.long}`,
+    );
+  }, 1000),
+);
+
+clientMQTT.on("error", (error) => console.log("error", error));
