@@ -36,7 +36,7 @@ io.on("disconnect", (socket) =>
 // MQTT connection
 const options: IClientOptions = {
   protocol: "mqtt",
-  host: "unibus.tech",
+  host: "unibus_mqtt",
   port: 1883,
   username: "anonymous",
   password: "anonymous",
@@ -47,7 +47,6 @@ const clientMQTT: MqttClient = connect(options);
 const plates = [
   {
     plate: "BRA2E19",
-    password: "$2b$10$dZXJhblfaxfK2ADbjlZ1gOyMLp1RjbWqXulpn2jb0nrdm/UFoncUy",
   },
 ];
 
@@ -56,25 +55,26 @@ clientMQTT.on("connect", () => {
     clientMQTT.subscribe(plate.plate, (err: Error | null) => {
       if (!err)
         console.log(
-          `[MQTT] > client ${clientMQTT.options.clientId} subscribed to ${plate.plate} topic`,
+          `[MQTT] > client subscribe ${clientMQTT.options.clientId} subscribed to ${plate.plate} topic`,
         );
       else {
-        console.log(err);
+        console.log(`[MQTT] > client subscribe erro`, err);
       }
     });
   }
+  clientMQTT.on("message", (topic: string, message: Buffer) => {
+    console.log(`[MQTT] > ${topic} recebeu ${message.toString()}`);
+    io.emit("positionBus", {
+      plate: topic,
+      position: parseCoordinates(message.toString()),
+    });
+    console.log(
+      `[WEBSOCKET] > postition ${message.toString()} of plate ${topic} updated`,
+    );
+  });
 });
 
-clientMQTT.on("message", (topic: string, message: Buffer) => {
-  console.log(`[MQTT] > ${topic} recebeu ${message.toString()}`);
-  io.emit("positionBus", {
-    plate: topic,
-    position: parseCoordinates(message.toString()),
-  });
-  console.log(
-    `[WEBSOCKET] > postition ${message.toString()} of plate ${topic} updated`,
-  );
-});
+clientMQTT.on("error", (error) => console.log("[MQTT] client error ", error));
 
 function parseCoordinates(coordinatesString: string) {
   const [latStr, longStr] = coordinatesString.split(",");

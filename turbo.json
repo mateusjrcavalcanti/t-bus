@@ -23,11 +23,10 @@
     },
     "start": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "dependsOn": ["^push"]
     },
-    "@unibus/web#start": {
-      "dependsOn": ["@unibus/db#push"]
-    },
+    "push": {},
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
       "outputMode": "new-only"

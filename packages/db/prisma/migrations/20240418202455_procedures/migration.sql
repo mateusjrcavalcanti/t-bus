@@ -5,7 +5,7 @@ DECLARE
     result TEXT;
 BEGIN
     IF plate_param = 'anonymous' THEN
-        SELECT 'anonymous' INTO result;
+        SELECT '$2a$10$41a/BJtD0VMntTE/SW3bgu2UyFIKUzHWgV5.OL00tLR5sC3soNeLu' INTO result;
     ELSE
         SELECT "password" INTO result FROM "Bus" WHERE "plate" = plate_param AND "isActive" = true LIMIT 1;
     END IF;

@@ -40,6 +40,8 @@ services:
       args:
         PACKAGE: '@unibus/websocket'
     restart: always
+    env_file:
+      - ../.env
     environment:
       - NODE_ENV=production
     depends_on:

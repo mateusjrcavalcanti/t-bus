@@ -46,30 +46,50 @@ let metros = 0;
 
 const options: IClientOptions = {
   protocol: "mqtt",
-  host: "unibus.tech",
+  // host: "unibus.tech",
+  host: process.env.DOMAIN_NAME,
   port: 1883,
   username: "BRA2E19",
-  password: "$2b$10$dZXJhblfaxfK2ADbjlZ1gOyMLp1RjbWqXulpn2jb0nrdm/UFoncUy",
+  password: "12345678",
 };
 
 const clientMQTT: MqttClient = connect(options);
 
-clientMQTT.on("connect", () =>
-  setInterval(() => {
-    metros = metros + qtdMetros;
-    const position = move(
-      -9.390472517435533,
-      -40.49732535541828,
-      0,
-      0,
-      metros,
-      0,
-    );
-    clientMQTT.publish(
-      `${clientMQTT.options.username}`,
-      `${position.lat},${position.long}`,
-    );
-  }, 1000),
-);
+clientMQTT.on("connect", () => {
+  clientMQTT.subscribe(`${clientMQTT.options.username}`, (err) => {
+    if (!err) {
+      console.log(
+        `[TEST MQTT] > client subscribe ${clientMQTT.options.username} subscribed to topic`,
+      );
+      const interval = setInterval(() => {
+        metros = metros + qtdMetros;
+        const position = move(
+          -9.390472517435533,
+          -40.49732535541828,
+          0,
+          0,
+          metros,
+          0,
+        );
+        clientMQTT.publish(
+          `${clientMQTT.options.username}`,
+          `${position.lat},${position.long}`,
+        );
+      }, 1000);
+      clientMQTT.on("close", () => {
+        clearInterval(interval);
+        console.log(
+          `[TEST MQTT] > client ${clientMQTT.options.username} disconnected`,
+        );
+      });
+    } else {
+      console.log(`[TEST MQTT] > subscribe erro`, err);
+    }
+  });
 
-clientMQTT.on("error", (error) => console.log("error", error));
+  clientMQTT.on("message", (topic, message) => {
+    console.log(`[TEST MQTT] > ${topic} recebeu ${message.toString()}`);
+  });
+});
+
+clientMQTT.on("error", (error) => console.log("[TEST MQTT] error ", error));
