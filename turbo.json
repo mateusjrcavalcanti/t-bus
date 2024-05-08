@@ -47,6 +47,7 @@
     }
   },
   "globalEnv": [
+    "NEXT_PUBLIC_DOMAIN_NAME",
     "DATABASE_URL",
     "AUTH_DISCORD_ID",
     "AUTH_DISCORD_SECRET",

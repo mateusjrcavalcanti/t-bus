@@ -87,7 +87,7 @@ services:
     image: nginx:latest
     container_name: unibus_proxy 
     environment:
-      - DOMAIN_NAME=${DOMAIN_NAME:-unibus.fbi.com}
+      - DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME:-unibus.fbi.com}
     ports:
       - 80:80
       - 443:443

@@ -2,4 +2,6 @@
 
 import { io } from "socket.io-client";
 
-export const socket = io("https://websocket.unibus.fbi.com");
+export const socket = io(
+  `https://websocket.${process.env.NEXT_PUBLIC_DOMAIN_NAME}`,
+);

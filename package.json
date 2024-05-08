@@ -27,10 +27,10 @@
     "db:migrate": "pnpm -F db migrate",
     "db:generate": "pnpm -F db generate",
     "db:seed": "pnpm -F db seed",
-    "docker:dev": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.dev.yaml up -d",
-    "docker:prod": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.prod.yaml up -d --build",
+    "docker:dev": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.dev.yaml up -d --remove-orphans",
+    "docker:prod": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.prod.yaml up -d --build --remove-orphans",
     "docker:down": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.dev.yaml down",
-    "docker:certbot": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.certbot.yaml up",
+    "docker:certbot": "export $(cat .env | grep -v ^# | xargs) && docker compose -f docker/docker-compose.certbot.yaml up --build --remove-orphans",
     "postdocker:certbot": "docker compose -f docker/docker-compose.certbot.yaml down"
   },
   "devDependencies": {
