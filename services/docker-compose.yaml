@@ -204,5 +204,5 @@ services:
       - ./ssl/data/proxy/:/var/www/certbot/:rw
       - ./ssl/data/logs/letsencrypt/:/var/log/letsencrypt/
     entrypoint: ["certbot"]
-    command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d *.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
+    command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d ${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.${NEXT_PUBLIC_DOMAIN_NAME} -d broker.${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.broker.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
 
