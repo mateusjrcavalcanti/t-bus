@@ -24,9 +24,9 @@
     "start": {
       "persistent": true,
       "cache": false,
-      "dependsOn": ["^push"]
+      "dependsOn": ["^db:deploy"]
     },
-    "push": {},
+    "db:deploy": {},
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
       "outputMode": "new-only"

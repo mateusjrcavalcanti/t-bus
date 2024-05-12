@@ -47,15 +47,24 @@ let metros = 0;
 const options: IClientOptions = {
   protocol: "mqtt",
   // host: "unibus.tech",
-  host: process.env.NEXT_PUBLIC_DOMAIN_NAME,
-  port: 1883,
+  host:
+    process.env.NEXT_PUBLIC_DOMAIN_NAME === "unibus.fbi.com"
+      ? "unibus_broker"
+      : process.env.NEXT_PUBLIC_DOMAIN_NAME,
+  port: process.env.NEXT_PUBLIC_DOMAIN_NAME === "unibus.fbi.com" ? 1883 : 80,
   username: "BRA2E19",
   password: "12345678",
 };
 
+console.log("[TEST MQTT] > options", options);
+
 const clientMQTT: MqttClient = connect(options);
 
 clientMQTT.on("connect", () => {
+  console.log(
+    `[TEST MQTT] > client ${clientMQTT.options.username} connected to broker`,
+  );
+
   clientMQTT.subscribe(`${clientMQTT.options.username}`, (err) => {
     if (!err) {
       console.log(
@@ -92,4 +101,9 @@ clientMQTT.on("connect", () => {
   });
 });
 
-clientMQTT.on("error", (error) => console.log("[TEST MQTT] error ", error));
+clientMQTT.on("error", (error) =>
+  console.log("[TEST MQTT] error ", error, {
+    host: options.host,
+    port: options.port,
+  }),
+);

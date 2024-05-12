@@ -1,0 +1,208 @@
+services:
+
+  # Serviços de banco de dados
+  database:  
+    container_name: unibus_database
+    image: postgres   
+    restart: unless-stopped
+    profiles:
+      - development
+      - production
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL}    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./database/data:/var/lib/postgresql/data 
+      - ./database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+
+  dbadmin:
+    container_name: unibus_dbadmin
+    image: dpage/pgadmin4  
+    depends_on:
+      - "database"  
+    profiles:
+      - development
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_PROXY_X_HOST_COUNT: 1
+      PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT: 1
+    volumes:
+      - ./dbadmin/data/:/var/lib/pgadmin/
+
+  # Serviços de aplicação web
+  website-development:
+    container_name: unibus_website
+    build:
+      context: ../
+      dockerfile: ./services/website/Dockerfile
+      target: development
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - development
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ..:/app
+    command: pnpm dev --filter='@unibus/web'
+
+  website-production:
+    container_name: unibus_website
+    build:
+      context: ../
+      dockerfile: ./services/website/Dockerfile
+      target: production
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - production
+    restart: unless-stopped   
+    env_file:
+      - ../.env
+    volumes:
+      - /app/node_modules
+    command: pnpm start --filter='@unibus/web'
+
+  websocket-development:
+    container_name: unibus_websocket
+    build:
+      context: ../
+      dockerfile: ./services/websocket/Dockerfile
+      target: development
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - development
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME}
+      - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+    volumes:
+      - ..:/app
+    command: pnpm dev --filter='@unibus/websocket'
+
+  websocket-production:
+    container_name: unibus_websocket
+    build:
+      context: ../
+      dockerfile: ./services/websocket/Dockerfile
+      target: production
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - production
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME}
+      - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+    volumes:
+      - /app/node_modules
+    command: pnpm dev --filter='@unibus/websocket'
+
+  # Serviços de mensageria
+  broker:
+    container_name: unibus_broker
+    build:
+      context: ./broker
+    profiles:
+      - development
+      - production
+    depends_on:
+      - database
+      - website-${NODE_ENV:-development}
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ./broker/mosquitto.conf:/tmp/mosquitto.conf
+
+  # Serviços de proxy
+  proxy-development:
+    image: nginx:latest
+    container_name: unibus_proxy 
+    profiles:
+      - development
+    depends_on:
+      - broker
+      - website-${NODE_ENV:-development}
+      - websocket-${NODE_ENV:-development}
+      - dbadmin
+    restart: unless-stopped
+    environment:
+      - DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME:-unibus.fbi.com}
+      - NODE_ENV=development
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/templates:/etc/nginx/templates:ro
+      - ./proxy/certs/:/etc/nginx/certs/:ro
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+
+  proxy-production:
+    image: nginx:latest
+    container_name: unibus_proxy 
+    profiles:
+      - production
+    depends_on:
+      - broker
+      - website-${NODE_ENV:-development}
+      - websocket-${NODE_ENV:-development}
+    restart: unless-stopped
+    environment:
+      - DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME:-unibus.fbi.com}
+      - NODE_ENV=production
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/templates:/etc/nginx/templates:ro
+      - ./proxy/certs/:/etc/nginx/certs/:ro
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+
+  # Serviços de certificação
+  ssl-webservice:
+    image: nginx:latest
+    profiles:
+      - certbot
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./ssl/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl/data/proxy/:/var/www/certbot/:ro
+
+  ssl:
+    image: certbot/certbot:latest
+    container_name: unibus_ssl
+    profiles:
+      - certbot
+    depends_on:
+      - ssl-webservice
+    environment:
+      DOMAIN_NAME: ${NEXT_PUBLIC_DOMAIN_NAME}
+    volumes: 
+      - ./ssl/data/letsencrypt/:/etc/letsencrypt/:rw
+      - ./ssl/data/proxy/:/var/www/certbot/:rw
+      - ./ssl/data/logs/letsencrypt/:/var/log/letsencrypt/
+    entrypoint: ["certbot"]
+    command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d *.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
+

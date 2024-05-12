@@ -49,8 +49,6 @@ dist/
 # turbo
 .turbo
 
-# certbot
-certbot/conf
-certbot/www
-certbot/logs
-docker/nginx/certs/
+# services
+services/**/data/
+services/proxy/certs/

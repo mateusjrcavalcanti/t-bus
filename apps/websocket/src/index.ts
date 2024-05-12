@@ -5,7 +5,6 @@ import { connect } from "mqtt";
 import { Server } from "socket.io";
 
 // WebSocket connection
-const hostname = "localhost";
 const port = 4000;
 
 const httpServer = createServer();
@@ -16,7 +15,7 @@ httpServer
     process.exit(1);
   })
   .listen(port, () => {
-    console.log(`[HTTP] > Ready on http://${hostname}:${port}`);
+    console.log(`[HTTP] > Ready on port:${port}`);
   });
 
 const io = new Server(httpServer, {
@@ -36,7 +35,7 @@ io.on("disconnect", (socket) =>
 // MQTT connection
 const options: IClientOptions = {
   protocol: "mqtt",
-  host: "unibus_mqtt",
+  host: "unibus_broker",
   port: 1883,
   username: "anonymous",
   password: "anonymous",
