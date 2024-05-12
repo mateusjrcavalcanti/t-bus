@@ -151,6 +151,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 1883:1883
     volumes:
       - ./proxy/templates:/etc/nginx/templates:ro
       - ./proxy/certs/:/etc/nginx/certs/:ro
@@ -172,6 +173,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 1883:1883
     volumes:
       - ./proxy/templates:/etc/nginx/templates:ro
       - ./proxy/certs/:/etc/nginx/certs/:ro

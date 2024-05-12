@@ -46,12 +46,11 @@ let metros = 0;
 
 const options: IClientOptions = {
   protocol: "mqtt",
-  // host: "unibus.tech",
   host:
     process.env.NEXT_PUBLIC_DOMAIN_NAME === "unibus.fbi.com"
       ? "unibus_broker"
       : process.env.NEXT_PUBLIC_DOMAIN_NAME,
-  port: process.env.NEXT_PUBLIC_DOMAIN_NAME === "unibus.fbi.com" ? 1883 : 80,
+  port: 1883,
   username: "BRA2E19",
   password: "12345678",
 };
