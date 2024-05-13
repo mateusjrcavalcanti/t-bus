@@ -128,6 +128,9 @@ services:
       - ../.env
     volumes:
       - ./broker/mosquitto.conf:/tmp/mosquitto.conf
+    ports:
+      - 1883:1883
+      - 8883:8883
 
   # Serviços de proxy
   proxy-development:
@@ -147,7 +150,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 1883:1883
     volumes:
       - ./proxy/templates:/etc/nginx/templates:ro
       - ./proxy/certs/:/etc/nginx/certs/:ro
@@ -169,7 +171,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 1883:1883
     volumes:
       - ./proxy/templates:/etc/nginx/templates:ro
       - ./proxy/certs/:/etc/nginx/certs/:ro
