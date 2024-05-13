@@ -34,7 +34,18 @@ up: ssl
 
 # Comando para encerrar os serviços
 down:
-	$(call DOCKER_COMPOSE_COMMAND) down
+    @RUNNING_CONTAINERS=$$(docker container ls -q); \
+    STOPPED_CONTAINERS=$$(docker container ls -q -f status=exited); \
+    if [ ! -z "$$RUNNING_CONTAINERS" ]; then \
+        echo "Parando contêineres em execução..."; \
+        docker container stop $$RUNNING_CONTAINERS; \
+        docker container rm $$RUNNING_CONTAINERS; \
+    fi; \
+    if [ ! -z "$$STOPPED_CONTAINERS" ]; then \
+        echo "Removendo contêineres parados..."; \
+        docker container rm $$STOPPED_CONTAINERS; \
+    fi
+
 
 # Comando para construir as imagens
 build:
@@ -94,17 +105,33 @@ ssl:
 	fi
 
 
-# Comando para limpar o Docker completamente
 destroy:
-	@echo "Removendo todos os contêineres, imagens, volumes e redes do Docker..."
-	@docker container rm $$(docker container ls -aq) 
-	@docker image rm $$(docker image ls -aq) 
-	@docker volume rm $$(docker volume ls -q) 
-	@docker network rm $$(docker network ls -q)
-	@docker builder prune
-	@echo "Remoção concluída."
+	@RUNNING_CONTAINERS=$$(docker container ls -q); \
+	STOPPED_CONTAINERS=$$(docker container ls -q -f status=exited); \
+	if [ ! -z "$$RUNNING_CONTAINERS" ]; then \
+		echo "Parando contêineres em execução..."; \
+		docker container stop $$RUNNING_CONTAINERS; \
+		docker container rm $$RUNNING_CONTAINERS; \
+	fi; \
+	if [ ! -z "$$STOPPED_CONTAINERS" ]; then \
+		echo "Removendo contêineres parados..."; \
+		docker container rm $$STOPPED_CONTAINERS; \
+	fi; \
+	if [ $$(docker image ls -q | wc -l) -gt 0 ]; then \
+		echo "Removendo imagens..."; \
+		docker image rm $$(docker image ls -aq); \
+	fi; \
+	if [ $$(docker volume ls -q | wc -l) -gt 0 ]; then \
+		echo "Removendo volumes..."; \
+		docker volume rm $$(docker volume ls -q); \
+	fi; \
+	NETWORKS_TO_REMOVE=$$(docker network ls --format "{{.ID}}:{{.Name}}" | grep -v 'bridge\|host\|none' | cut -d ':' -f1); \
+	if [ ! -z "$$NETWORKS_TO_REMOVE" ]; then \
+		echo "Removendo redes..."; \
+		docker network rm $$NETWORKS_TO_REMOVE; \
+	fi; \
+	docker builder prune -f; \
+	echo "Remoção concluída."
 
-	
-
-
+# Diretiva que informa ao Make que a regra não cria um arquivo com o nome do comando
 .PHONY: up down certbot build certbot-test ssl

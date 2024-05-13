@@ -8,6 +8,8 @@ createJiti(fileURLToPath(import.meta.url))("./src/env");
 const config = {
   reactStrictMode: true,
 
+  output: "standalone",
+
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@unibus/api",

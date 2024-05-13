@@ -7,7 +7,7 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^generate"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -27,6 +27,7 @@
       "dependsOn": ["^db:deploy"]
     },
     "db:deploy": {},
+    "generate": {},
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
       "outputMode": "new-only"

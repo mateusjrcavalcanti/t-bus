@@ -56,7 +56,6 @@ services:
       - ../.env
     volumes:
       - ..:/app
-    command: pnpm dev --filter='@unibus/web'
 
   website-production:
     container_name: unibus_website
@@ -74,7 +73,6 @@ services:
       - ../.env
     volumes:
       - /app/node_modules
-    command: pnpm start --filter='@unibus/web'
 
   websocket-development:
     container_name: unibus_websocket
@@ -94,7 +92,6 @@ services:
       - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
     volumes:
       - ..:/app
-    command: pnpm dev --filter='@unibus/websocket'
 
   websocket-production:
     container_name: unibus_websocket
@@ -114,7 +111,6 @@ services:
       - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
     volumes:
       - /app/node_modules
-    command: pnpm dev --filter='@unibus/websocket'
 
   # Serviços de mensageria
   broker:

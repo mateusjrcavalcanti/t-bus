@@ -23,6 +23,7 @@
     "ui-add": "pnpm -F ui ui-add",
     "precommit": "turbo lint && turbo format && turbo typecheck",
     "db:deploy": "turbo db:deploy",
+    "generate": "turbo generate",
     "db": "pnpm -C packages/db"
   },
   "devDependencies": {
