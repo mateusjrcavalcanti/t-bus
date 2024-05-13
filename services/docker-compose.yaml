@@ -63,6 +63,8 @@ services:
       context: ../
       dockerfile: ./services/website/Dockerfile
       target: production
+      args:
+        - NEXT_PUBLIC_DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME}
     depends_on:
       database:
         condition: service_healthy

@@ -1,4 +1,5 @@
 ARG NODE_VERSION=20
+ARG NEXT_PUBLIC_DOMAIN_NAME
 
 # Alpine image
 FROM node:${NODE_VERSION}-alpine AS alpine
@@ -18,6 +19,7 @@ RUN turbo prune @unibus/web --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
+ARG NEXT_PUBLIC_DOMAIN_NAME
 RUN apk add --no-cache libc6-compat
 RUN apk update
 RUN npm i -g pnpm@9.0.1
@@ -33,6 +35,8 @@ RUN pnpm i
 COPY --from=builder /app/out/full/ .
 ENV SKIP_ENV_VALIDATION=True
 ENV AUTH_SECRET=secret
+ENV NEXT_PUBLIC_DOMAIN_NAME=${NEXT_PUBLIC_DOMAIN_NAME}
+
 RUN pnpm turbo run build --filter=web
 
 FROM base AS production
