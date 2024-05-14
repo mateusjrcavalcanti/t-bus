@@ -190,6 +190,8 @@ services:
     volumes:
       - ./ssl/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./ssl/data/proxy/:/var/www/certbot/:ro
+    networks:
+      - ssl_network
 
   ssl:
     image: certbot/certbot:latest
@@ -204,6 +206,25 @@ services:
       - ./ssl/data/letsencrypt/:/etc/letsencrypt/:rw
       - ./ssl/data/proxy/:/var/www/certbot/:rw
       - ./ssl/data/logs/letsencrypt/:/var/log/letsencrypt/
+    networks:
+      - ssl_network
     entrypoint: ["certbot"]
     command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d ${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.${NEXT_PUBLIC_DOMAIN_NAME} -d broker.${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.broker.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
 
+  gprs_builder:
+      build:
+        context: ./a9g/
+      container_name: gprs_builder
+      profiles:
+        - a9g
+      volumes:
+        - ./a9g/data:/projects/GPRS_C_SDK/hex/
+        - ./a9g/project:/projects/GPRS_C_SDK/project/
+      stdin_open: true
+      tty: true
+      entrypoint: /bin/sh
+      network_mode: none
+
+networks:
+  ssl_network:
+    driver: bridge

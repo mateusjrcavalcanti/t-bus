@@ -133,5 +133,11 @@ destroy:
 	docker builder prune -f; \
 	echo "Remoção concluída."
 
+# Comando para subir os serviços
+a9g:
+	$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans
+	@docker exec -it gprs_builder bash && \
+	$(call DOCKER_COMPOSE_COMMAND,a9g) down  
+
 # Diretiva que informa ao Make que a regra não cria um arquivo com o nome do comando
 .PHONY: up down certbot build certbot-test ssl
