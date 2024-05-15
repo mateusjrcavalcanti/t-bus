@@ -214,12 +214,15 @@ services:
   gprs_builder:
       build:
         context: ./a9g/
+        args:
+          - UID=${UID:-1000}
+          - GID=${GID:-1000}
       container_name: gprs_builder
       profiles:
         - a9g
       volumes:
-        - ./a9g/data:/projects/GPRS_C_SDK/hex/
-        - ./a9g/project:/projects/GPRS_C_SDK/project/
+        - ./a9g/data:/home/a9g/projects/GPRS_C_SDK/hex/
+        - ./a9g/unibus:/home/a9g/projects/GPRS_C_SDK/unibus/
       stdin_open: true
       tty: true
       entrypoint: /bin/sh
