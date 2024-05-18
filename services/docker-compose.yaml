@@ -215,7 +215,7 @@ services:
       container_name: gprs_builder
       build:
         context: ./a9g/
-        target: BUILD
+        target: build
         args:
           - UID=${UID:-1000}
           - GID=${GID:-1000}

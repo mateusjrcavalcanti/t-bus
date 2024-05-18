@@ -135,9 +135,18 @@ destroy:
 
 # Comando para subir os serviços
 a9g:
+	@if docker ps -a --format '{{.Names}}' | grep -q '^gprs_builder$$'; then \
+		if docker ps --format '{{.Names}}' | grep -q '^gprs_builder$$'; then \
+			echo "Parando o contêiner 'gprs_builder'..."; \
+			docker stop gprs_builder; \
+		fi; \
+		echo "Removendo o contêiner 'gprs_builder'..."; \
+		docker rm gprs_builder; \
+	fi
 	@xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ./services/a9g/docker.xauth nmerge -
 	$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans
-	@docker exec -it gprs_builder bash && \
+	@docker exec -it gprs_builder bash
+	@docker exec -it gprs_builder bash -c "~/CSDTK/cooltools/coolwatcher" && \
 	$(call DOCKER_COMPOSE_COMMAND,a9g) down  
 
 # Diretiva que informa ao Make que a regra não cria um arquivo com o nome do comando
