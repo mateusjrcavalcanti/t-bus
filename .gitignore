@@ -52,3 +52,4 @@ dist/
 # services
 services/**/data/
 services/proxy/certs/
+services/**/docker.xauth

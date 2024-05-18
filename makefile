@@ -34,17 +34,17 @@ up: ssl
 
 # Comando para encerrar os serviços
 down:
-    @RUNNING_CONTAINERS=$$(docker container ls -q); \
-    STOPPED_CONTAINERS=$$(docker container ls -q -f status=exited); \
-    if [ ! -z "$$RUNNING_CONTAINERS" ]; then \
-        echo "Parando contêineres em execução..."; \
-        docker container stop $$RUNNING_CONTAINERS; \
-        docker container rm $$RUNNING_CONTAINERS; \
-    fi; \
-    if [ ! -z "$$STOPPED_CONTAINERS" ]; then \
-        echo "Removendo contêineres parados..."; \
-        docker container rm $$STOPPED_CONTAINERS; \
-    fi
+	@RUNNING_CONTAINERS=$$(docker container ls -q); \
+	STOPPED_CONTAINERS=$$(docker container ls -q -f status=exited); \
+	if [ ! -z "$$RUNNING_CONTAINERS" ]; then \
+		echo "Parando contêineres em execução..."; \
+		docker container stop $$RUNNING_CONTAINERS; \
+		docker container rm $$RUNNING_CONTAINERS; \
+	fi; \
+	if [ ! -z "$$STOPPED_CONTAINERS" ]; then \
+		echo "Removendo contêineres parados..."; \
+		docker container rm $$STOPPED_CONTAINERS; \
+	fi
 
 
 # Comando para construir as imagens
@@ -135,6 +135,7 @@ destroy:
 
 # Comando para subir os serviços
 a9g:
+	@xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ./services/a9g/docker.xauth nmerge -
 	$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans
 	@docker exec -it gprs_builder bash && \
 	$(call DOCKER_COMPOSE_COMMAND,a9g) down  

@@ -212,17 +212,26 @@ services:
     command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d ${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.${NEXT_PUBLIC_DOMAIN_NAME} -d broker.${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.broker.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
 
   gprs_builder:
+      container_name: gprs_builder
       build:
         context: ./a9g/
+        target: BUILD
         args:
           - UID=${UID:-1000}
           - GID=${GID:-1000}
-      container_name: gprs_builder
       profiles:
         - a9g
+      environment:
+        - DISPLAY=$DISPLAY
+        - XAUTHORITY=/home/a9g/.Xauthority
+        - QT_X11_NO_MITSHM=1
       volumes:
-        - ./a9g/data:/home/a9g/projects/GPRS_C_SDK/hex/
-        - ./a9g/unibus:/home/a9g/projects/GPRS_C_SDK/unibus/
+        - ./a9g/data:/home/a9g/GPRS_C_SDK/hex/
+        - ./a9g/unibus:/home/a9g/GPRS_C_SDK/unibus/
+        - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        - ./a9g/docker.xauth:/home/a9g/.Xauthority:rw
+      devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
       stdin_open: true
       tty: true
       entrypoint: /bin/sh
@@ -230,4 +239,6 @@ services:
 
 networks:
   ssl_network:
+    driver: bridge
+  gprs_network:
     driver: bridge
