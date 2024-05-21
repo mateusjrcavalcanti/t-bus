@@ -143,9 +143,8 @@ a9g:
 		echo "Removendo o contêiner 'gprs_builder'..."; \
 		docker rm gprs_builder; \
 	fi
-	@xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ./services/a9g/docker.xauth nmerge -
+	@xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ./services/a9g/data/.Xauthority nmerge -
 	$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans
-	@docker exec -it gprs_builder bash
 	@docker exec -it gprs_builder bash -c "~/CSDTK/cooltools/coolwatcher" && \
 	$(call DOCKER_COMPOSE_COMMAND,a9g) down  
 

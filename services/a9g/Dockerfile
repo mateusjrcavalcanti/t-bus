@@ -68,12 +68,16 @@ RUN usermod -a -G dialout a9g
 RUN echo "a9g ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers > /dev/null
 
 FROM users as build
+
 ARG UID=1000
 ARG GID=1000
-# Define o usuário a9g como usuário padrão
-USER $UID:$GID
 # Define o diretório de trabalho
 WORKDIR /home/a9g
+# Adiciona o script de entrada
+COPY start.sh start.sh
+RUN chmod +x start.sh
+# Define o usuário a9g como usuário padrão
+USER $UID:$GID
 # Define o shell padrão
 RUN touch ~/.profile
 # Download do CSDTK42
@@ -83,5 +87,3 @@ COPY --from=gprs_c_sdk --chown=$UID:$GID /home/root/GPRS_C_SDK /home/a9g/GPRS_C_
 # Executa script de setup
 RUN cd ~/CSDTK \
     && ./setup.sh ./ ~/
-# Initial project
-WORKDIR /home/a9g/GPRS_C_SDK

@@ -226,15 +226,16 @@ services:
         - XAUTHORITY=/home/a9g/.Xauthority
         - QT_X11_NO_MITSHM=1
       volumes:
-        - ./a9g/data:/home/a9g/GPRS_C_SDK/hex/
+        - ./a9g/data/hex/:/home/a9g/GPRS_C_SDK/hex/
+        - ./a9g/data/include/:/home/a9g/include/
         - ./a9g/unibus:/home/a9g/GPRS_C_SDK/unibus/
         - /tmp/.X11-unix:/tmp/.X11-unix:rw
-        - ./a9g/docker.xauth:/home/a9g/.Xauthority:rw
+        - ./a9g/data/.Xauthority:/home/a9g/.Xauthority:rw
       devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
       stdin_open: true
       tty: true
-      entrypoint: /bin/sh
+      entrypoint: /home/a9g/start.sh
       network_mode: none
 
 networks:
