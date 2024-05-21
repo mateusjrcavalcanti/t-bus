@@ -64,9 +64,9 @@ certbot:
 	echo "Pasta de origem: $$source"; \
 	echo "Pasta de destino: $$destino"; \
 	echo ""; \
-	rm -rf "$$data"; \
+	sudo rm -rf "$$data"; \
 	mkdir -p "$$data"; \
-	rm -rf "$$destino"*; \
+	sudo rm -rf "$$destino"*; \
 	echo "Subindo o container certbot"; \
 	$(call DOCKER_COMPOSE_COMMAND,certbot) up -d; \
 	echo ""; \
@@ -74,6 +74,11 @@ certbot:
 	docker logs -f unibus_ssl; \
 	echo ""; \
 	echo "Aguardando o certificado SSL..."; \
+	while [ ! -d "$$source" ]; do \
+		echo "Aguardando criação do diretório $$data..."; \
+		sleep 5; \
+	done; \
+	sudo chown -R 1000:1000 "$$data"; \
 	while [ ! -d "$$source" ]; do \
 		echo "Aguardando o certificado SSL em $$source..."; \
 		sleep 5; \

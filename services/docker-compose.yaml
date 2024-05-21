@@ -209,7 +209,7 @@ services:
     networks:
       - ssl_network
     entrypoint: ["certbot"]
-    command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d ${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.${NEXT_PUBLIC_DOMAIN_NAME} -d broker.${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.broker.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
+    command: "certonly --webroot --webroot-path /var/www/certbot/ --email email@email.com -d ${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.${NEXT_PUBLIC_DOMAIN_NAME} -d websocket.broker.${NEXT_PUBLIC_DOMAIN_NAME} --agree-tos"
 
   gprs_builder:
       container_name: gprs_builder
