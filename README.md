@@ -11,6 +11,22 @@ Use o comando para clonar o repositório:
 git clone https://github.com/mateusjrcavalcanti/unibus.git
 ```
 
+Use o comando instalar o `make`:
+
+```bash
+sudo apt-get install make
+```
+
+Use o comando instalar o `mkcert`:
+
+```bash
+sudo apt install libnss3-tools
+curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+chmod +x mkcert-v*-linux-amd64
+sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+rm mkcert-v1.4.4-linux-amd64
+```
+
 ## Sobre
 
 O projeto é composto por uma aplicação `WEB` e outra `Mobile`, estruturado em Monorepo com [Turborepo](https://turborepo.org) e contem:

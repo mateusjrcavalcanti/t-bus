@@ -222,7 +222,7 @@ services:
       profiles:
         - a9g
       environment:
-        - DISPLAY=$DISPLAY
+        - DISPLAY=${DISPLAY:-':0'}
         - XAUTHORITY=/home/a9g/.Xauthority
         - QT_X11_NO_MITSHM=1
       volumes:
