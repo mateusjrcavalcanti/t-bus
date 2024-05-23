@@ -21,6 +21,9 @@
     "api_hal_uart.h": "c",
     "gps.h": "c",
     "gps_parse.h": "c",
-    "api_info.h": "c"
+    "api_info.h": "c",
+    "hello.h": "c",
+    "network.h": "c",
+    "math.h": "c"
   }
 }

@@ -8,6 +8,7 @@
 #include "network.h"
 
 HANDLE TestDNSTaskHandle = NULL;
+bool isNetworkRegisteredRoaming = false;
 
 #define DOMAIN_NUMBER 1
 const char domains[DOMAIN_NUMBER][10] = {
@@ -69,6 +70,7 @@ void NetworkEventDispatch(API_Event_t *pEvent)
     case API_EVENT_ID_NETWORK_REGISTERED_HOME:
     case API_EVENT_ID_NETWORK_REGISTERED_ROAMING:
         Trace(2, "network register success");
+        isNetworkRegisteredRoaming = true;
         AttachActivate();
         break;
 

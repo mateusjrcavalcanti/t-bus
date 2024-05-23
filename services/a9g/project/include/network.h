@@ -15,6 +15,8 @@
 
 extern HANDLE TestDNSTaskHandle;
 
+extern bool isNetworkRegisteredRoaming;
+
 void NetworkEventDispatch(API_Event_t *pEvent);
 void TestDNSTask(void *param);
 
