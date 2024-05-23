@@ -48,12 +48,16 @@ RUN apt-get install -yq \
     gcc-multilib \
     g++-multilib \
     lib32z1 \
-    python \
-    # GPRS Burn and Debug
+    python 
+# GPRS Burn and Debug
+RUN apt-get install -yq \
     libqt4-qt3support \
     itcl3 \
     itk3 \
-    iwidgets4
+    iwidgets4 
+# Watch project folder for build
+RUN apt-get install -yq \
+    inotify-tools
 
 FROM deps as users
 ARG UID=1000

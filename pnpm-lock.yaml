@@ -269,6 +269,9 @@ importers:
 
   apps/websocket:
     dependencies:
+      dotenv-cli:
+        specifier: ^7.4.1
+        version: 7.4.1
       mqtt:
         specifier: ^5.5.5
         version: 5.5.5

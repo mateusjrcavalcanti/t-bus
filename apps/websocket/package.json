@@ -6,10 +6,10 @@
   "main": "build/index.js",
   "scripts": {
     "with-env": "dotenv -e ../../.env --",
-    "dev": "nodemon",
-    "testmqtt": "nodemon --exec 'ts-node --files ./src/testmqtt.ts'",
+    "dev": "pnpm with-env nodemon",
+    "testmqtt": "pnpm with-env nodemon --exec 'ts-node --files ./src/testmqtt.ts'",
     "build": "npx tsc --build",
-    "start": "node build/index.js",
+    "start": "pnpm with-env node build/index.js",
     "clean": "git clean -xdf .turbo node_modules build",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -25,6 +25,7 @@
   },
   "prettier": "@unibus/prettier-config",
   "dependencies": {
+    "dotenv-cli": "^7.4.1",
     "mqtt": "^5.5.5",
     "nodemon": "^3.1.0",
     "socket.io": "^4.7.5",

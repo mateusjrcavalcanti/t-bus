@@ -225,10 +225,12 @@ services:
         - DISPLAY=${DISPLAY:-':0'}
         - XAUTHORITY=/home/a9g/.Xauthority
         - QT_X11_NO_MITSHM=1
+        - demo=${demo:-}
       volumes:
         - ./a9g/data/hex/:/home/a9g/GPRS_C_SDK/hex/
         - ./a9g/data/include/:/home/a9g/include/
-        - ./a9g/unibus:/home/a9g/GPRS_C_SDK/unibus/
+        - ./a9g/data/libs/:/home/a9g/libs/
+        - ./a9g/project:/home/a9g/GPRS_C_SDK/unibus/
         - /tmp/.X11-unix:/tmp/.X11-unix:rw
         - ./a9g/data/.Xauthority:/home/a9g/.Xauthority:rw
       devices:

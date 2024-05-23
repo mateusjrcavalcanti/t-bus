@@ -138,7 +138,8 @@ destroy:
 	docker builder prune -f; \
 	echo "Remoção concluída."
 
-# Comando para subir os serviços
+# Comando para fazer o build e executar o coolwatcher
+demo ?=
 a9g:
 	@if docker ps -a --format '{{.Names}}' | grep -q '^gprs_builder$$'; then \
 		if docker ps --format '{{.Names}}' | grep -q '^gprs_builder$$'; then \
@@ -149,9 +150,16 @@ a9g:
 		docker rm gprs_builder; \
 	fi
 	@xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ./services/a9g/data/.Xauthority nmerge -
-	$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans
-	@docker exec -it gprs_builder bash -c "~/CSDTK/cooltools/coolwatcher" && \
-	$(call DOCKER_COMPOSE_COMMAND,a9g) down  
+	@if [ -n "$(demo)" ]; then \
+		demo=$(demo) $(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans; \
+	else \
+		$(call DOCKER_COMPOSE_COMMAND,a9g) up -d --build --remove-orphans; \
+	fi
+
+
+# Comando para fazer o build
+coolwatcher:
+	@docker exec -u root -it gprs_builder bash -c "/home/a9g/CSDTK/cooltools/coolwatcher"
 
 # Diretiva que informa ao Make que a regra não cria um arquivo com o nome do comando
 .PHONY: up down certbot build certbot-test ssl
