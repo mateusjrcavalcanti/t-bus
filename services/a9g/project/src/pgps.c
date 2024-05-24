@@ -12,6 +12,7 @@
 
 #include "pgps.h"
 #include "network.h"
+#include "mqtt.h"
 
 HANDLE gpsTaskHandle = NULL;
 
@@ -55,6 +56,7 @@ void GPSTask(void *pData)
 {
     GPS_Info_t *gpsInfo = Gps_GetInfo();
     uint8_t buffer[300];
+    char coordBuffer[100];
 
     // wait for gprs register complete
     // The process of GPRS registration network may cause the power supply voltage of GPS to drop,
@@ -139,11 +141,17 @@ void GPSTask(void *pData)
                      gpsInfo->gga.fix_quality, gpsInfo->gga.satellites_tracked, gpsInfo->gsv[0].total_sats, isFixedStr, latitude, longitude, gpsInfo->gga.altitude);
             // show in tracer
             Trace(2, buffer);
+            // send the coordinates string to MQTT
+            if (mqttStatus == MQTT_STATUS_CONNECTED)
+            {
+                snprintf(coordBuffer, sizeof(coordBuffer), "%f,%f", latitude, longitude);
+                mqttPublish(client, coordBuffer);
+            }
             // send to UART1
             UART_Write(UART1, buffer, strlen(buffer));
             UART_Write(UART1, "\r\n\r\n", 4);
         }
 
-        OS_Sleep(5000);
+        OS_Sleep(1000 * 30);
     }
 }

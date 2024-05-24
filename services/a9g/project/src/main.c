@@ -10,6 +10,7 @@
 #include "network.h"
 #include "hello.h"
 #include "pgps.h"
+#include "mqtt.h"
 
 HANDLE mainTaskHandle = NULL;
 
@@ -38,12 +39,16 @@ void MainTask(void *pData)
     API_Event_t *event = NULL;
 
     // Hello Task
-    helloTaskHandle = OS_CreateTask(HelloTask,
-                                    NULL, NULL, HELLO_TASK_STACK_SIZE, HELLO_TASK_PRIORITY, 0, 0, HELLO_TASK_NAME);
+    // helloTaskHandle = OS_CreateTask(HelloTask,
+    //                                NULL, NULL, HELLO_TASK_STACK_SIZE, HELLO_TASK_PRIORITY, 0, 0, HELLO_TASK_NAME);
 
     // Test DNS Task
-    TestDNSTaskHandle = OS_CreateTask(TestDNSTask,
-                                      NULL, NULL, TEST_DNS_TASK_STACK_SIZE, TEST_DNS_TASK_PRIORITY, 0, 0, TEST_DNS_TASK_NAME);
+    // TestDNSTaskHandle = OS_CreateTask(TestDNSTask,
+    //                                  NULL, NULL, TEST_DNS_TASK_STACK_SIZE, TEST_DNS_TASK_PRIORITY, 0, 0, TEST_DNS_TASK_NAME);
+
+    // MQTT Task
+    mqttTaskHandle = OS_CreateTask(MQTTTask,
+                                   NULL, NULL, MQTT_TASK_STACK_SIZE, MQTT_TASK_PRIORITY, 0, 0, MQTT_TASK_NAME);
 
     // GPS Task
     // open UART1 to print NMEA infomation
@@ -58,7 +63,7 @@ void MainTask(void *pData)
 
     // Create UART1 send task and location print task
     gpsTaskHandle = OS_CreateTask(GPSTask,
-                                  NULL, NULL, MAIN_TASK_STACK_SIZE, MAIN_TASK_PRIORITY, 0, 0, MAIN_TASK_NAME);
+                                  NULL, NULL, GPS_TASK_STACK_SIZE, GPS_TASK_PRIORITY, 0, 0, GPS_TASK_NAME);
 
     while (1)
     {

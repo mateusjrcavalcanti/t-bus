@@ -6,7 +6,7 @@
 #include "api_event.h"
 
 #define HELLO_TASK_STACK_SIZE (2048 * 2)
-#define HELLO_TASK_PRIORITY 1
+#define HELLO_TASK_PRIORITY 3
 #define HELLO_TASK_NAME "Hello Test Task"
 
 extern HANDLE helloTaskHandle;

@@ -6,6 +6,7 @@
 #include <api_socket.h>
 
 #include "network.h"
+#include "mqtt.h"
 
 HANDLE TestDNSTaskHandle = NULL;
 bool isNetworkRegisteredRoaming = false;
@@ -100,6 +101,8 @@ void NetworkEventDispatch(API_Event_t *pEvent)
 
     case API_EVENT_ID_NETWORK_ACTIVATED:
         Trace(2, "network activate success..");
+        if (semMqttStart)
+            OS_ReleaseSemaphore(semMqttStart);
         break;
 
     case API_EVENT_ID_SIGNAL_QUALITY:
